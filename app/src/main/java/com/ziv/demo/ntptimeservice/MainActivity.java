@@ -4,7 +4,9 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
+import com.ziv.demo.ntptimeservice.services.NtpTime;
 import com.ziv.demo.ntptimeservice.services.SntpClient;
 import com.ziv.demo.ntptimeservice.services.TimeTask;
 
@@ -20,6 +22,8 @@ import java.util.concurrent.Future;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
+    public TextView textView;
+
 
 //    private static final String[] DATE_PATTERNS = {
 //            "EEE, dd MMM yyyy HH:mm:ss Z", // RFC 822, updated by RFC 1123
@@ -28,35 +32,36 @@ public class MainActivity extends AppCompatActivity {
 //            "EEE MMM dd kk:mm:ss z yyyy" // Local Date Time
 //    };
 //    private static final TimeZone GMT_ZONE = TimeZone.getTimeZone("GMT");
-    private String ntpServer = "ntp1.aliyun.com";
+    /*private String ntpServer = "ntp1.aliyun.com";
+    private long ntpTime=0;
+    private boolean ntpFlag=false;*/
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
-        TimeTask timeTask = new TimeTask();
-        timeTask.setNtpTime(1234656);
-        Log.d(TAG, "onCreate: ntp时间："+timeTask.getNtpTime());
 
 /*        ExecutorService threadExecutor = Executors.newSingleThreadExecutor();
         threadExecutor.submit(timeTask);*/
-        Thread thread = new Thread(new Runnable() {
+/*        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 SntpClient sntpClient = new SntpClient();
-                sntpClient.requestTime(ntpServer,30000);
-                Log.d(TAG, "run:?? "+sntpClient.getNtpTime());
+                sntpClient.requestTime(ntpServer,3000);
+                Log.d(TAG, "run:Thread "+sntpClient.getNtpTime());
+                ntpTime=sntpClient.getNtpTime();
             }
         });
         thread.start();
-        while (thread.isAlive()){
-            Log.d(TAG, "onCreate: 线程活着");
-        }
-        try {
-            Log.d(TAG, "onCreate: ntp时间2："+timeTask.getNtpTime());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        while (!ntpFlag){
+            if(ntpTime!=0){
+                Log.d(TAG, "onCreate: 线程结束，ntp时间："+ntpTime);
+                ntpFlag=true;}
+        }*/
+        NtpTime ntpTime=new NtpTime();
+        Log.d(TAG, "onCreate: "+ntpTime.getNtpTime());
+
 
 /*        Log.d(TAG, "Date parse start.");
         String time = new Date(1617885471511L).toString();
